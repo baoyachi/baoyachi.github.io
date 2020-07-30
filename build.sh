@@ -1,2 +1,3 @@
 #!/bin/bash
-mdbook build & cp -ir book/* ./
+mdbook build 
+cp -rf book/* ./
