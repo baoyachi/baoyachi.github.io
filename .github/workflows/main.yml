@@ -7,8 +7,6 @@ jobs:
   build_pages:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
     - name: Install mdbook
       run: |
             sudo apt update
