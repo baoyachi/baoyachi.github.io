@@ -16,4 +16,4 @@ jobs:
     - name: Build pages
       run: cp -rf book/* ./
     - name: publish
-      run: git add . && git commit -m 'build pages' && git push origin master
+      run: git add . && git commit -m 'auto build pages' && git push origin master
