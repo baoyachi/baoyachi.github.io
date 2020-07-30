@@ -7,8 +7,6 @@ jobs:
   build_pages:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
     - name: Install mdbook
       run: sudo snap install mdbook
     - name: Deploy
@@ -16,5 +14,5 @@ jobs:
       with:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         BRANCH: master
-        FOLDER: book
         BUILD_SCRIPT: mdbook book
+        FOLDER: book
