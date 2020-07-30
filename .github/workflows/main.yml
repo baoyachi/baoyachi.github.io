@@ -9,12 +9,10 @@ jobs:
   build_pages:
     runs-on: ubuntu-latest
     steps:
-    # - name: Install Rust (rustup)
-      # run: rustup update stable --no-self-update && rustup default stable
-    # - name: Install mdbook
-      # run: cargo install mdbook
     - name: Install mdbook
-      run: apt-install mdbook
+      run: sudo apt install mdbook
+    - name: Build book
+      run: mdbook build
     - name: Build pages
       run: cp -rf book/* ./
     - name: publish
