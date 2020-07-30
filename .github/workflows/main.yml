@@ -16,4 +16,9 @@ jobs:
     - name: Build pages
       run: cp -rf book/* ./
     - name: publish
-      run: git add . && git commit -m 'auto build pages' && git push origin master
+      run: |
+        git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
+        git pull github ${GITHUB_REF} --ff-only
+        git add ...
+        git commit -m "auto publish"
+        git push origin master
