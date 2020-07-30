@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Install mdbook
-      run: sudo apt install mdbook
+      run: sudo snap install mdbook
     - name: Build book
       run: mdbook build
     - name: Build pages
