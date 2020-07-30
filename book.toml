@@ -1,0 +1,6 @@
+[book]
+authors = ["baoyachi"]
+language = "en"
+multilingual = false
+src = "src"
+title = "baoyachi's blog"
