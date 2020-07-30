@@ -9,7 +9,7 @@ jobs:
   build_pages:
     runs-on: ubuntu-latest
     steps:
-    - name: Install Rust (rustup)
+    # - name: Install Rust (rustup)
       # run: rustup update stable --no-self-update && rustup default stable
     # - name: Install mdbook
       # run: cargo install mdbook
