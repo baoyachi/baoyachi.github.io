@@ -4,17 +4,21 @@ on:
     branches:
       - master
 jobs:
-  build_pages:
-    runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-18.04
     steps:
-    - name: Install mdbook
-      run: |
-            rustup update stable --no-self-update && rustup default stable
-            cargo install mdbook
-    - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@releases/v3
-      with:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        BRANCH: master
-        BUILD_SCRIPT: ls -al && pwd && mdbook book
-        FOLDER: book
+      - uses: actions/checkout@v2
+
+      - name: Setup mdBook
+        uses: peaceiris/actions-mdbook@v1
+        with:
+          mdbook-version: '0.4.1'
+          # mdbook-version: 'latest'
+
+      - run: mdbook build
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.ACCESS_TOKEN }}
+          publish_dir: ./book
