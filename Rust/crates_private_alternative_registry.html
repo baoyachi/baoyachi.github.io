@@ -1,0 +1,572 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Rust crates私有化部署指南 - baoyachi's blog</title>
+        
+        
+
+
+        <!-- Custom HTML head -->
+        
+
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../Rust/rust.html"><strong aria-hidden="true">1.</strong> Rust</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../Rust/rust_error_handle.html"><strong aria-hidden="true">1.1.</strong> 细说Rust错误处理</a></li><li class="chapter-item expanded "><a href="../Rust/crates_private_alternative_registry.html" class="active"><strong aria-hidden="true">1.2.</strong> Rust crates私有化部署指南</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        
+                    </div>
+
+                    <h1 class="menu-title">baoyachi's blog</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#rust-crates私有化部署指南private-alternative-registry" id="rust-crates私有化部署指南private-alternative-registry">Rust crates私有化部署指南(private alternative registry)</a></h1>
+<p>在<code>Rust</code>中,一般使用外部依赖的库部署在<a href="https://crates.io/">https://crates.io/</a>。我们直接在<code>Cargo.toml</code>的<code>dependencies</code>配置即可，列如下配置：</p>
+<pre><code class="language-toml">...
+[dependencies]
+rand = &quot;0.7.3&quot;
+serde = &quot;1.0&quot;
+serde_derive = &quot;1.0&quot;
+serde_json = &quot;1.0&quot;
+lazy_static = &quot;1.4.0&quot;
+...
+</code></pre>
+<p>如果细心的同学会发现，如果<code>rand</code>库更新到<code>rand = &quot;0.7.4&quot;</code>时，我们执行<code>cargo update</code>，<code>Cargo.lock</code>会自动更新<code>rand</code>到最新的<code>0.7.4</code>版本。这主要是<code>Rust</code>采用了<a href="https://semver.org/">语义化版本</a>。</p>
+<p>但是这样的依赖对于<code>Rust</code>提供的<code>crates.io</code>是没问题的，面对私有化的项目，即不能共享到公开的<code>crates</code>上，又想做到私有依赖，问题就暴露了。</p>
+<h2><a class="header" href="#2cargo私有化git依赖" id="2cargo私有化git依赖">2.cargo私有化git依赖</a></h2>
+<p>一般来说，企业的私有代码，都依赖于私有git仓库。翻过<code>cargo</code>的文档时，这里就提到了一个关于git私有化依赖的问题，详见链接：</p>
+<ul>
+<li><a href="https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#specifying-dependencies-from-git-repositories">https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#specifying-dependencies-from-git-repositories</a></li>
+</ul>
+<p>这里的git私有化不外乎这几种依赖：<code>branch</code>依赖，<code>tag</code>依赖，<code>commit-id</code>依赖，列如下配置：</p>
+<pre><code class="language-toml">[dependencies]
+rand = { git = &quot;https://github.com/rust-lang-nursery/rand&quot;, branch = &quot;master&quot; }
+rand = { git = &quot;https://github.com/rust-lang-nursery/rand&quot;, tag = &quot;0.2.2&quot; }
+rand = { git = &quot;https://github.com/rust-lang-nursery/rand&quot;, rev = &quot;e2112c4&quot; }
+</code></pre>
+<p>看到这里，我们就想到了才有私有化<code>git</code>方式依赖，我们也这样做了。接下来问题便发生了。</p>
+<ul>
+<li>2.1 在项目中，我们定义了一些公共依赖的结构：<code>hula_common</code>私有仓库。</li>
+<li>2.2 <code>A</code>项目(lib)使用了<code>hula_common</code>的仓库，依赖<code>tag=&quot;0.1.5&quot;</code>如下</li>
+</ul>
+<pre><code class="language-toml">hula_common = { package = &quot;hula_common&quot;, git = &quot;ssh://git@git.baoyachi.com/hula/hula_common.git&quot; , tag = &quot;0.1.5&quot; }
+</code></pre>
+<ul>
+<li>2.3. <code>B</code>项目(lib)也使用了<code>hula_common</code>的仓库，依赖<code>tag=&quot;0.1.4&quot;</code>如下</li>
+</ul>
+<pre><code class="language-toml">hula_common  = { package = &quot;hula_common&quot;, git   = &quot;ssh://git@git.baoyachi.com/hula/hula_common.git&quot; , tag = &quot;0.1.4&quot; }
+</code></pre>
+<ul>
+<li>
+<p>2.4 <code>A</code>lib和<code>B</code>lib都同时依赖了<code>hula_common</code>，两者区别就是引用的git的<code>tag</code>版本不同。</p>
+</li>
+<li>
+<p>2.5 在主程序的<code>project</code>名称是<code>fuzz</code>中,<code>fuzz</code>同时依赖了<code>A</code>,<code>B</code>,<code>hula_common</code>等私有<code>lib</code>,大致如下：</p>
+</li>
+</ul>
+<pre><code class="language-toml">...
+[dependencies]
+serde_derive = &quot;1.0.111&quot;
+serde = &quot;1.0.111&quot;
+serde_json = &quot;1.0.53&quot;
+...
+
+hula_common = { package = &quot;hula_common&quot;, git = &quot;ssh://git@git.baoyachi.com/hula/hula_common.git&quot; , tag = &quot;0.1.5&quot; }
+B = { package = &quot;B&quot;, git = &quot;ssh://git@git.baoyachi.com/hula/B.git&quot; , tag = &quot;0.3.2&quot; }
+A = { package = &quot;A&quot;, git = &quot;ssh://git@git.baoyachi.com/hula/A.git&quot; , tag = &quot;0.5.7&quot; }
+...
+</code></pre>
+<ul>
+<li>2.6 当我们编译<code>fuzz</code>时，居然编译报错?</li>
+</ul>
+<pre><code class="language-bash">error[E0308]: mismatched types
+   --&gt; src/common/query.rs:196:23
+    |
+196 |         let items = self.query(pos, key)?;
+    |                                ^^^^^ expected struct `hula_common::query::Container`, found struct `hula_common::query::Container`
+    |
+    = note: expected reference `&amp;hula_common::query::Container`
+               found reference `&amp;hula_common::query::Container`
+    = note: perhaps two different versions of crate `hula_common` are being used?
+</code></pre>
+<p>大致意思是：<code>hula_common</code>使用了不同版本(different versions),导致编译报错。这个很让人诡异：
+对于上面提到的<code>rand</code>在<code>crates.io</code>的依赖，如果版本更新，会自动更新，反而因为<code>git</code>的<code>tag</code>差异，Rust认为导入的<code>crate</code>不一致，这个问题纠结了我很久。</p>
+<p>一方面，想要让所有库依赖同一个<code>tag</code>，这个着实让人头疼。<code>hula_common</code>的定义由<code>0.1.4</code>-&gt;<code>0.1.5</code>,可能只是针对<code>B</code>项目增加的局部字段，而不会影响<code>A</code>项目的编译。按理说，若<code>Rust</code>遵循<a href="https://semver.org/">https://semver.org</a>语义化版本的依赖，应该是可以正常编译过的，但现实是failed。</p>
+<p>如果熟悉<code>go mod</code>的依赖，就会发现，上面这种依赖方式，在<code>go mod</code>编译时，是完全ok的。同样的问题，对于<code>Rust</code>来说，为何编译失败？因此，带着问题，寻求官方的回复，有人便给了反馈,原话如下：</p>
+<pre><code class="language-bash">Cargo has no way of knowing that two different tags point to compatible projects. If you want a shared dependency on a git project it has to be the same commit to be compatible. Cargo will happily build both tags into the same project, but it will not treat types from one as the same as types from the other.
+
+...
+git tags are arbitrary strings, we have no way to know if &quot;master&quot; and &quot;dev&quot; are sember compatible. crates.io versions are semver versions, so we can determine that &quot;^0.1.4&quot; can resolve to 0.1.5. Note that if you have &quot;=0.1.4&quot; as a requirement on crates.io you would also get an error.
+
+Your company may want to create a private alternative registry.
+</code></pre>
+<p>大致意思是：Cargo无法知道两个不同的tag指向兼容的项目。如果要共享对git项目的依赖，则必须具有相同的commit才能兼容。本身git的<code>tag</code>可以是任意字符串，<code>Cargo</code>无法知道<code>master</code>和<code>dev</code>是否与<code>semver versions</code>的版本兼容。</p>
+<p>如果真的要使用<code>semver versions</code>让<code>Cargo</code>认识，需要创建类似<code>crates.io</code>的私有<code>private alternative registry</code>。</p>
+<h2><a class="header" href="#3-alternative-registry" id="3-alternative-registry">3 alternative registry</a></h2>
+<p>在<code>Rust 1.34.0</code>的版本中，支持了<code>Alternative cargo registries</code>。什么意思？通常我们不仅仅依赖<code>crates.io</code>上的代码，在企业或其他组织中，存在大量私有仓库代码（gitlab）,使得我们在对于<code>Cargo</code>依赖时，既需要依赖<code>crates.io</code>，又要有其他的<code>registry</code>依赖，<code>1.34.0</code>的版本开始支持了该特性。大致配置如下：</p>
+<ul>
+<li>
+<p>3.1 创建在git上的<code>crate index</code>的存储仓库
+假设我们在gitlab上创建了一个关于私有的<code>crates</code>的存储仓库：<code>https://git.baoyachi.com/hula/crates-index.git</code>。</p>
+</li>
+<li>
+<p>3.2 找到<code>.cargo</code>的根目录，创建<code>config.toml</code>文件（./cargo/config.toml）,在<code>config.toml</code>配置自己的<code>registry</code>,假设我们命名:<code>git-baoyachi</code>, 并做如下配置：</p>
+</li>
+</ul>
+<pre><code class="language-toml">[registries]
+git-baoyachi = { index = &quot;https://git.baoyachi.com/hula/crates-index&quot; }
+</code></pre>
+<p>或是这样：</p>
+<pre><code class="language-toml">[registries.git-baoyachi]
+index = &quot;https://git.baoyachi.com/hula/crates-index&quot;
+</code></pre>
+<p><strong>上面两者是等价的，二选一即可。</strong></p>
+<p>注意：假设私有仓库是<code>gitlab</code>,这里的<code>index</code>的链接即为gitlab的链接，即为：<code>https://git.baoyachi.com/hula/crates-index.git</code>。这里我们使用的是<code>http</code>或<code>https</code>的方式，如果是ssh的话，列配置如下：</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>[registries.git-baoyachi]
+index = &quot;ssh://git@git.baoyachi.com/hula/crates-index.git&quot;
+<span class="boring">}
+</span></code></pre></pre>
+<p>或是这样：</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>[registries]
+git-baoyachi = {index = &quot;ssh://git@git.baoyachi.com/hula/crates-index.git&quot;}
+<span class="boring">}
+</span></code></pre></pre>
+<p>请注意:<strong>从gitlab的克隆按钮复制/粘贴时，SSH网址有两个主要区别：必须在前面添加ssh://，并将gi.xxx.com之后的<code>:</code>更改为<code>/</code></strong></p>
+<ul>
+<li>3.3 配置crates备用注册表的服务
+如果读了文档的，细心的同学会发现，文档中只是介绍了怎么配置，因为并没有告诉怎么搭建私有的<code>alternative registry</code>。好在开源社区提供了私有化的crates的注册服务:<a href="https://github.com/Hirevo/alexandrie">https://github.com/Hirevo/alexandrie</a></li>
+</ul>
+<p>我们跟着文档手册手动搭一个试试：<a href="https://hirevo.github.io/alexandrie/installation-script.html">https://hirevo.github.io/alexandrie/installation-script.html</a></p>
+<ul>
+<li>3.3.1 创建安装配置脚本:<code>alexandrie.sh</code></li>
+</ul>
+<pre><code class="language-bash">#!/bin/bash
+
+# function to run when an error is encountered
+function setup_error {
+    echo &quot;-------- An error occurred during configuration --------&quot;
+    exit 1
+}
+
+# exit on error
+trap 'setup_error' ERR
+
+# directory to clone Alexandrie into:
+ALEXANDRIE_DIR=&quot;$2&quot;;
+
+# URL to the crate index repository.
+CRATE_INDEX_GIT_URL=&quot;$1&quot;;
+
+
+while ! git ls-remote -h $CRATE_INDEX_GIT_URL; do
+    read -p 'CRATE_INDEX_GIT_URL: ' CRATE_INDEX_GIT_URL;
+done
+
+if ! cargo -V; then
+    echo;
+    echo &quot;In order to build an instance of Alexandrie, you need to have Rust installed on your system&quot;;
+    echo &quot;You can learn how to install Rust on your system on the official Rust website:&quot;;
+    echo &quot;https://www.rust-lang.org/tools/install&quot;;
+    echo;
+    ! :;    # trigger error trap
+fi
+
+if [ -d &quot;$ALEXANDRIE_DIR&quot; ]; then
+    echo
+    echo &quot;'$ALEXANDRIE_DIR' (ALEXANDRIE_DIR) is an existing directory, pulling latest changes ...&quot;;
+    cd &quot;$ALEXANDRIE_DIR&quot;;
+    git pull;
+    echo &quot;Changes have been pulled successfully !&quot;;
+    echo;
+else
+    echo;
+    echo &quot;Cloning Alexandrie in '$ALEXANDRIE_DIR' ...&quot;;
+    git clone https://github.com/Hirevo/alexandrie.git &quot;$ALEXANDRIE_DIR&quot;;
+    cd &quot;$ALEXANDRIE_DIR&quot;;
+    echo &quot;Successfully cloned Alexandrie !&quot;;
+    echo;
+fi
+
+echo &quot;Building Alexandrie (using the default features)...&quot;;
+echo &quot;(keep in mind that the default features may not fit your use-case, be sure to review them before deplying it to production)&quot;;
+cargo build -p alexandrie;
+echo &quot;Alexandrie has been built successfully !&quot;;
+
+# create the directory serving as the storage of crate archives.
+mkdir -p crate-storage;
+
+# setup the crate index.
+if [ -d crate-index ]; then
+    echo;
+    echo &quot;'${ALEXANDRIE_DIR}/crate-index' is an existing directory, pulling latest changes ...&quot;;
+    cd crate-index;
+    git pull;
+    echo &quot;Changes have been pulled successfully !&quot;;
+    echo;
+else
+    echo;
+    echo &quot;Cloning crate index in '${ALEXANDRIE_DIR}/crate-index' ...&quot;;
+    git clone &quot;$CRATE_INDEX_GIT_URL&quot; crate-index;
+    cd crate-index;
+    echo &quot;Successfully cloned the crate index !&quot;;
+    echo;
+fi
+
+# configure the crate index
+if [ ! -f config.json ]; then
+    echo &quot;The crate index does not have a 'config.json' file.&quot;;
+    echo &quot;Creating an initial one (please also review it before deploying the registry in production) ...&quot;
+    cat &gt; config.json &lt;&lt; EOF;
+{
+    &quot;dl&quot;: &quot;http://$(hostname):3000/api/v1/crates/{crate}/{version}/download&quot;,
+    &quot;api&quot;: &quot;http://$(hostname):3000&quot;,
+    &quot;allowed-registries&quot;: [&quot;https://github.com/rust-lang/crates.io-index&quot;]
+}
+EOF
+    git add config.json;
+    git commit -m 'Added `config.json`';
+    git push -u origin master;
+    echo &quot;Initial 'config.json' file has been created and pushed to the crate index !&quot;;
+    echo;
+fi
+
+echo &quot;Alexandrie should be good to go for an initial run.&quot;;
+echo &quot;You can start the Alexandrie instance by:&quot;;
+echo &quot;  - navigating to '${ALEXANDRIE_DIR}'&quot;;
+echo &quot;  - tweaking the 'alexandrie.toml' file&quot;;
+echo &quot;  - run `./target/debug/alexandrie`&quot;;
+echo;
+
+</code></pre>
+<p>注意：该脚本需要两个参数：</p>
+<ul>
+<li>
+<p><code>ALEXANDRIE_DIR</code>: 本地的路径,列如：/home/baoyachi/alexandrie</p>
+</li>
+<li>
+<p><code>CRATE_INDEX_GIT_URL</code>:就是我们在3.1创建的<code>crats index</code>的git地址，如：<code>ssh://git@git.baoyachi.com/hula/crates-index.git</code></p>
+</li>
+<li>
+<p>3.3.2 执行脚本</p>
+</li>
+</ul>
+<pre><code class="language-bash">sh alexandrie.sh ssh://git@git.baoyachi.com/hula/crates-index.git /home/baoyachi/alexandrie
+</code></pre>
+<p>解释下该脚本做的工作：clone <code>CRATE_INDEX_GIT_URL</code>仓库，创建<code>config.json</code>,配置如下：</p>
+<pre><code class="language-json">{
+    &quot;dl&quot;: &quot;http://{{host:port}}/api/v1/crates/{crate}/{version}/download&quot;,
+    &quot;api&quot;: &quot;http://{{host:port}}&quot;,
+    &quot;allowed-registries&quot;: [&quot;https://github.com/rust-lang/crates.io-index&quot;]
+}
+</code></pre>
+<p>这里的<code>host</code>,<code>port</code>最终换成线上部署的服务。</p>
+<ul>
+<li>3.3.3 启动服务</li>
+</ul>
+<pre><code class="language-bash">cd /home/baoyachi/alexandrie
+./target/debug/alexandrie alexandrie.toml
+</code></pre>
+<p>服务启动完成，大致输出如下：</p>
+<pre><code class="language-bash">➜  alexandrie git:(master) ./target/debug/alexandrie alexandrie.toml
+Jul 26 22:23:36.382 INFO running database migrations, version: 0.1.0
+Jul 26 22:23:36.383 INFO setting up request logger middleware, version: 0.1.0
+Jul 26 22:23:36.383 INFO setting up cookie middleware, version: 0.1.0
+Jul 26 22:23:36.384 INFO setting up authentication middleware, version: 0.1.0
+Jul 26 22:23:36.384 INFO mounting '/', version: 0.1.0
+Jul 26 22:23:36.384 INFO mounting '/me', version: 0.1.0
+Jul 26 22:23:36.384 INFO mounting '/search', version: 0.1.0
+Jul 26 22:23:36.385 INFO mounting '/most-downloaded', version: 0.1.0
+Jul 26 22:23:36.385 INFO mounting '/last-updated', version: 0.1.0
+Jul 26 22:23:36.385 INFO mounting '/crates/:crate', version: 0.1.0
+Jul 26 22:23:36.386 INFO mounting '/account/login', version: 0.1.0
+Jul 26 22:23:36.386 INFO mounting '/account/logout', version: 0.1.0
+Jul 26 22:23:36.386 INFO mounting '/account/register', version: 0.1.0
+...
+...
+Jul 26 22:23:36.391 INFO mounting '/api/v1/crates/:name', version: 0.1.0
+Jul 26 22:23:36.391 INFO mounting '/api/v1/crates/:name/owners', version: 0.1.0
+Jul 26 22:23:36.392 INFO mounting '/api/v1/crates/:name/:version/yank', version: 0.1.0
+Jul 26 22:23:36.392 INFO mounting '/api/v1/crates/:name/:version/unyank', version: 0.1.0
+Jul 26 22:23:36.392 INFO mounting '/api/v1/crates/:name/:version/download', version: 0.1.0
+Jul 26 22:23:36.392 INFO listening on 127.0.0.1:3000, version: 0.1.0
+Jul 26 22:23:36.392 INFO Server listening on http://127.0.0.1:3000, version: 0.1.0
+</code></pre>
+<ul>
+<li>3.4 执行cargo login
+在执行<code>cargo login --registry=my-registry</code>,这里的<code>my-registry</code>即为3.2配置的index名称，假设为：<code>git-baoyachi</code>,则执行</li>
+</ul>
+<pre><code class="language-bash">➜ cargo login --registry=git-baoyachi
+please visit http://localhost:3000/me and paste the API Token below
+2506b7bd94dfc708b755d5399
+       Login token for `git-baoyachi` saved
+</code></pre>
+<p>提示我们需要输入token,我们在3.3.3启动的本地服务，访问http://localhost:3000/me，系统提示我们注册，生成token，大致如下：
+<img src="./alexandrie_get_token.png" alt="token" /></p>
+<ul>
+<li>3.5 创建，发布私有<code>crates</code>库
+假设我们创建了库，<code>cargo new hula-common --lib</code>,我们将该库发布到指定的私有git仓库中，如3.1所述，执行如下命令,这里的<code>my-registry</code>即为3.2配置的index名称，假设为：<code>git-baoyachi</code>,则执行</li>
+</ul>
+<pre><code class="language-bash">cargo publish --registry=git-baoyachi
+</code></pre>
+<p>如果login成功的话，执行结果大致如下：</p>
+<pre><code class="language-bash">➜  cargo publish --registry=git-baoyachi 
+    Updating `ssh://git@git.baoyachi.com/hula/crates-index.git` index
+warning: manifest has no description, license, license-file, documentation, homepage or repository.
+See https://doc.rust-lang.org/cargo/reference/manifest.html#package-metadata for more info.
+   Packaging hula-common v1.0.2 (/home/baoyachi/git_project/crates-index/hula-common)
+   Verifying hula-common v1.0.2 (/home/baoyachi/git_project/crates-index/hula-common)
+   Compiling hula-common v1.0.2 (/home/baoyachi/git_project/crates-index/hula-common/target/package/h2-1.0.2)
+    Finished dev [unoptimized + debuginfo] target(s) in 1.18s
+   Uploading hula-common v1.0.2 (/home/baoyachi/git_project/crates-index/hula-common)
+➜     
+</code></pre>
+<p>注意，<code>alexandrie</code>会检查<code>Cargo.toml</code>的版本<code>version = &quot;1.0.3&quot;</code>，如果同一版本publish多次，会报如下错误：</p>
+<pre><code class="language-bash">error: failed to get a 200 OK response, got 500
+headers:
+	HTTP/1.1 100 Continue
+
+	HTTP/1.1 500 Internal Server Error
+
+	content-length: 0
+
+	date: Sun, 26 Jul 2020 10:42:46 GMT
+
+body:
+</code></pre>
+<p>我们需要检查当前库的版本号是否重复即可。如果按上步骤执行ok的话，<code>alexandrie</code>会自动push我们仓库的私有<code>crates</code>的git仓库，更新当前publish库的信息。</p>
+<h2><a class="header" href="#4-使用私有crates依赖" id="4-使用私有crates依赖">4. 使用私有crates依赖</a></h2>
+<p>我们在第一章节也详细描述了，如果使用git的<code>branch</code>或<code>tag</code>依赖时，会出现当前<code>perhaps two different versions of crate</code>的问题，我们花了大量篇幅讲解如果使用创建和发布私库，就是为了解决git依赖的问题。那么，答案来了，我们只需要修改<code>Cargo.toml</code>的<code>dependencies</code>依赖即可，我们还是以第一章列子举例配置：</p>
+<pre><code class="language-toml">...
+[dependencies]
+serde_derive = &quot;1.0.111&quot;
+serde = &quot;1.0.111&quot;
+serde_json = &quot;1.0.53&quot;
+...
+
+hula_common = { version=&quot;0.1.4&quot;, registry = &quot;git-baoyachi&quot; }
+B = { package = &quot;B&quot;, version=&quot;0.3.2&quot;, registry = &quot;git-baoyachi&quot; }
+A = { package = &quot;A&quot;, version=&quot;0.5.7&quot;, registry = &quot;git-baoyachi&quot; }
+...
+</code></pre>
+<p>我们只需要在依赖后面，指定自定义的<code>registry</code>配置即可。这样，即使<code>hula_common</code>升级到<code>version=&quot;0.1.5&quot;</code>,我们执行<code>cargo update</code>也可以让正常编译。</p>
+<h2><a class="header" href="#5总结" id="5总结">5.总结</a></h2>
+<p>我们想建立私有的<code>crates</code>的配置，大致需要如下几步：</p>
+<ul>
+<li>创建存储<code>crates-index</code>的私有仓库</li>
+<li>部署 <a href="https://github.com/Hirevo/alexandrie">alexandrie</a>的私有服务，绑定域名</li>
+<li>建立认证，获取<code>cargo login</code>的<code>token</code></li>
+<li>对应<code>lib</code>执行<code>cargo publish</code></li>
+<li>使用依赖，配置指定<code>registry</code></li>
+</ul>
+<h2><a class="header" href="#写在最后" id="写在最后">写在最后</a></h2>
+<p>关于这部分的问题，Rust的相关资料在中文社区，网上的查到还是较少，一方面是语言普及度的原因，另一方面是社区分享的少。但这并不妨碍我们解决问题。对于先吃螃蟹的，总会磕磕绊绊，在这解决问题的过程中，对于问题的刨根，和开源社区交流，沟通以及协作上的思维方式还是有不少收获。</p>
+<h2><a class="header" href="#参考链接" id="参考链接">参考链接</a></h2>
+<ul>
+<li><a href="https://github.com/rust-lang/cargo/issues/8536">https://github.com/rust-lang/cargo/issues/8536</a></li>
+<li><a href="https://doc.rust-lang.org/cargo/reference/registries.html#using-an-alternate-registry">https://doc.rust-lang.org/cargo/reference/registries.html#using-an-alternate-registry</a></li>
+<li><a href="https://github.com/Hirevo/alexandrie/issues/75">https://github.com/Hirevo/alexandrie/issues/75</a></li>
+<li><a href="https://blog.rust-lang.org/2019/04/11/Rust-1.34.0.html">https://blog.rust-lang.org/2019/04/11/Rust-1.34.0.html</a></li>
+<li><a href="https://github.com/rust-lang/rfcs/blob/master/text/2141-alternative-registries.md">https://github.com/rust-lang/rfcs/blob/master/text/2141-alternative-registries.md</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="../Rust/rust_error_handle.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a rel="prev" href="../Rust/rust_error_handle.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        
+
+        
+
+        
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>
