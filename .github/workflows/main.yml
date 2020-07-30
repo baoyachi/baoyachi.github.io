@@ -10,7 +10,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Install mdbook
-      run: sudo snap install mdbook
+      run: |
+            sudo apt update
+            sudo apt install snapd
+            sudo snap install mdbook
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
