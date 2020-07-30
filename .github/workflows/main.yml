@@ -18,7 +18,7 @@ jobs:
       - run: mdbook build
 
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-master@v3
         with:
           github_token: ${{ secrets.ACCESS_TOKEN }}
           publish_dir: ./book
