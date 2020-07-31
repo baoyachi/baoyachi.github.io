@@ -21,9 +21,8 @@ jobs:
       - run: |
               mdbook build
               cp -rf book/* ./
-              git status
               git config --global user.email "liaoymxsdl@gmail.com"
               git config --global user.name "baoyachi"
               git add .
               git commit -m 'auto publish'
-              git push origin master
+              git push -f origin master 
