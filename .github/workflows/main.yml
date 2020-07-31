@@ -18,6 +18,7 @@ jobs:
           # mdbook-version: 'latest'
 
       - run: |
+              git pull origin master
               mdbook build
               cp -rf book/* ./
               git config --global user.email "liaoymxsdl@gmail.com"
