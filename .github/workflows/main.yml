@@ -18,12 +18,17 @@ jobs:
           mdbook-version: '0.4.1'
           # mdbook-version: 'latest'
 
-      - run: mdbook build
+      - run: |
+              mdbook build
+              cp -rf book/* ./
+              git add .
+              git commit -m 'auto publish'
+              git push origin master
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.ACCESS_TOKEN }}
-          publish_branch: master
-          publish_dir: ./book
-          allow_empty_commit: true
+      # - name: Deploy
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.ACCESS_TOKEN }}
+      #     publish_branch: master
+      #     publish_dir: ./book
+      #     allow_empty_commit: true
