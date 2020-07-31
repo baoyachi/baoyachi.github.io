@@ -26,11 +26,3 @@ jobs:
               git add .
               git commit -m 'auto publish'
               git push origin master
-
-      # - name: Deploy
-      #   uses: peaceiris/actions-gh-pages@v3
-      #   with:
-      #     github_token: ${{ secrets.ACCESS_TOKEN }}
-      #     publish_branch: master
-      #     publish_dir: ./book
-      #     allow_empty_commit: true
