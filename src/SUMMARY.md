@@ -7,5 +7,5 @@
   - [Rust crates私有化部署指南](./Rust/crates_private_alternative_registry.md)
   - [Rust改善代码小技巧_之代码块](./Rust/advice_rust_code_with_block.md)
   
-- [golang](./Golang/readmd.md)
+- [Golang](./Golang/readmd.md)
   
