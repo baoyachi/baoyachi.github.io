@@ -31,7 +31,7 @@ fn get_msg_2(msg: &Option<Message>) -> String {
 }
 
 fn get_msg_3(msg: &Option<Message>) -> String {
-    msg.as_ref().map(|msg| format!("{}", msg.0)).unwrap_or("Ok".to_string())
+    msg.as_ref().map(|msg| format!("{}", msg.0)).unwrap_or_else(||"Ok".to_string())
 }
 
 #[cfg(test)]
