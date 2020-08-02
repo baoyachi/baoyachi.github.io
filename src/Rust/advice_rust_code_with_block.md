@@ -16,7 +16,7 @@ fn get_msg(msg: &Option<Message>) -> String {
     rep_msg
 }
 ```
-* 2.为了避免`resp_msg`是`mut`，建议改使用下面这种方式：
+* 2.为了避免`resp_msg`使用`mut`，建议改使用下面这种方式：
 ```rust
 fn get_msg(msg: &Option<Message>) -> String {
     let rep_msg = if let Some(msg) = msg {
