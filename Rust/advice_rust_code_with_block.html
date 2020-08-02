@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Rust改善代码小技巧_之代码块</title>
+        <title>Rust代码优化-闭包惰性求值</title>
         
         
 
@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../about.html"><strong aria-hidden="true">1.</strong> 关于</a></li><li class="chapter-item expanded "><a href="../Rust/index.html"><strong aria-hidden="true">2.</strong> Rust</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../Rust/rust_error_handle.html"><strong aria-hidden="true">2.1.</strong> 细说Rust错误处理</a></li><li class="chapter-item expanded "><a href="../Rust/crates_private_alternative_registry.html"><strong aria-hidden="true">2.2.</strong> Rust crates私有化部署指南</a></li><li class="chapter-item expanded "><a href="../Rust/advice_rust_code_with_block.html" class="active"><strong aria-hidden="true">2.3.</strong> Rust改善代码小技巧_之代码块</a></li></ol></li><li class="chapter-item expanded "><a href="../Golang/readmd.html"><strong aria-hidden="true">3.</strong> Golang</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../about.html"><strong aria-hidden="true">1.</strong> 关于</a></li><li class="chapter-item expanded "><a href="../Rust/index.html"><strong aria-hidden="true">2.</strong> Rust</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../Rust/rust_error_handle.html"><strong aria-hidden="true">2.1.</strong> 细说Rust错误处理</a></li><li class="chapter-item expanded "><a href="../Rust/crates_private_alternative_registry.html"><strong aria-hidden="true">2.2.</strong> Rust crates私有化部署指南</a></li><li class="chapter-item expanded "><a href="../Rust/advice_rust_code_with_block.html" class="active"><strong aria-hidden="true">2.3.</strong> Rust代码优化-闭包惰性求值</a></li></ol></li><li class="chapter-item expanded "><a href="../Golang/readmd.html"><strong aria-hidden="true">3.</strong> Golang</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -155,7 +155,13 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1><a class="header" href="#rust改善代码小技巧_之代码块" id="rust改善代码小技巧_之代码块">Rust改善代码小技巧_之代码块</a></h1>
+                        <h1><a class="header" href="#rust代码优化-闭包惰性求值" id="rust代码优化-闭包惰性求值">Rust代码优化-闭包惰性求值</a></h1>
+<h2><a class="header" href="#背景" id="背景">背景</a></h2>
+<p>写代码时，经常会遇到从<code>Option</code>或<code>Result</code>中取值得问题，为了避免使用<code>unwrap()</code>,使用了<code>if let Some(xxx)</code>或<code>if let Ok(xxx)</code>
+的代码表达。之前的文章也介绍了这种写法，惯用法也自以为习以为常。</p>
+<ul>
+<li>1.最近一次代码在发PR时，下面这段代码作者建议，又有了写收获：</li>
+</ul>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -168,8 +174,15 @@ fn get_msg(msg: &amp;Option&lt;Message&gt;) -&gt; String {
     }
     rep_msg
 }
-
-fn get_msg_1(msg: &amp;Option&lt;Message&gt;) -&gt; String {
+<span class="boring">}
+</span></code></pre></pre>
+<ul>
+<li>2.为了避免<code>resp_msg</code>是<code>mut</code>，建议改使用下面这种方式：</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn get_msg(msg: &amp;Option&lt;Message&gt;) -&gt; String {
     let rep_msg = if let Some(msg) = msg {
         format!(&quot;{}&quot;, msg.0)
     } else {
@@ -177,8 +190,16 @@ fn get_msg_1(msg: &amp;Option&lt;Message&gt;) -&gt; String {
     };
     rep_msg
 }
-
-fn get_msg_2(msg: &amp;Option&lt;Message&gt;) -&gt; String {
+<span class="boring">}
+</span></code></pre></pre>
+<p>通过赋值方式传递<code>rep_msg</code>,避免了<code>rep_msg</code>的可变性。</p>
+<ul>
+<li>3.本身上面代码看起来还是有点绕口，为了表达直观，通过代码块<code>{}</code>，可表达为下面方式：</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn get_msg(msg: &amp;Option&lt;Message&gt;) -&gt; String {
     let rep_msg = {
         if let Some(msg) = msg {
             format!(&quot;{}&quot;, msg.0)
@@ -188,28 +209,50 @@ fn get_msg_2(msg: &amp;Option&lt;Message&gt;) -&gt; String {
     };
     rep_msg
 }
-
-fn get_msg_3(msg: &amp;Option&lt;Message&gt;) -&gt; String {
-    msg.as_ref().map(|msg| format!(&quot;{}&quot;, msg.0)).unwrap_or_else(||&quot;Ok&quot;.to_string())
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_get_msg() {
-        let key = Some(Message(32usize));
-        let expect = &quot;32&quot;.to_string();
-        assert_eq!(expect, get_msg(&amp;key));
-        assert_eq!(expect, get_msg_1(&amp;key));
-        assert_eq!(expect, get_msg_2(&amp;key));
-        assert_eq!(expect, get_msg_3(&amp;key));
-    }
+<span class="boring">}
+</span></code></pre></pre>
+<ul>
+<li>4.但是上面代码看起来还是有点啰嗦，我们继续优化，可以采用<code>Option</code>的组合子方法，链式表达，修改如下</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn get_msg(msg: &amp;Option&lt;Message&gt;) -&gt; String {
+    msg.as_ref().map(|msg| format!(&quot;{}&quot;, msg.0)).unwrap_or(&quot;Ok&quot;.to_string())
 }
 <span class="boring">}
 </span></code></pre></pre>
-<p>//TODO add desc...</p>
+<p>是不是使用combinator的模式，代码更简单、直观了。但是，这里还是有点缺陷，我们继续往下看：</p>
+<ul>
+<li>5.如果使用<code>cargo clippy</code>的使用，<code>clippy</code>会经常提示我们修改这段逻辑：</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>msg.unwrap_or(&quot;Ok&quot;.to_string())
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try this: `unwrap_or_else(|| &quot;OK&quot;.to_string())`
+                                          |
+<span class="boring">}
+</span></code></pre></pre>
+<p>为什么呢？对于<code>unwrap_or</code>,即使不使用其值，参数<code>&quot;Ok&quot;.to_string()</code>也将进行求值。对于<code>unwrap_or_else</code>，参数接收一个闭包，
+当触发<code>unwrap_or_else</code>调用时，通过传递函数(闭包)进行惰性求值(lazy evaluation)计算，提升程序性能,那我们改造下</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn get_msg(msg: &amp;Option&lt;Message&gt;) -&gt; String {
+    msg.as_ref().map(|msg| format!(&quot;{}&quot;, msg.0)).unwrap_or_else(||&quot;Ok&quot;.to_string())
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>从第一个函数看到现在，有么有收获呢？欢迎大家在评论区留言，一起交流。</p>
+<h2><a class="header" href="#最后" id="最后">最后</a></h2>
+<p>推荐大家在Rust项目中，将 <a href="https://github.com/rust-lang/rust-clippy">clippy</a> 这个插件使用起来，优化程序的结构。让优秀成为一种习惯。</p>
+<h2><a class="header" href="#参考链接" id="参考链接">参考链接</a></h2>
+<ul>
+<li><a href="https://github.com/rust-lang/rust/pull/55014">https://github.com/rust-lang/rust/pull/55014</a></li>
+<li><a href="https://stackoverflow.com/questions/56726571/why-choosing-unwrap-or-else-over-unwrap-or">https://stackoverflow.com/questions/56726571/why-choosing-unwrap-or-else-over-unwrap-or</a></li>
+<li><a href="https://stackoverflow.com/questions/45547293/why-should-i-prefer-optionok-or-else-instead-of-optionok-or">https://stackoverflow.com/questions/45547293/why-should-i-prefer-optionok-or-else-instead-of-optionok-or</a></li>
+</ul>
 
                     </main>
 
