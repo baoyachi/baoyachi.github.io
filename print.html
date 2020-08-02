@@ -1297,7 +1297,7 @@ fn get_msg_2(msg: &amp;Option&lt;Message&gt;) -&gt; String {
 }
 
 fn get_msg_3(msg: &amp;Option&lt;Message&gt;) -&gt; String {
-    msg.as_ref().map(|msg| format!(&quot;{}&quot;, msg.0)).unwrap_or(&quot;Ok&quot;.to_string())
+    msg.as_ref().map(|msg| format!(&quot;{}&quot;, msg.0)).unwrap_or_else(||&quot;Ok&quot;.to_string())
 }
 
 #[cfg(test)]
