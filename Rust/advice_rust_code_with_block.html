@@ -156,6 +156,7 @@
                 <div id="content" class="content">
                     <main>
                         <h1><a class="header" href="#rust代码优化-闭包惰性求值" id="rust代码优化-闭包惰性求值">Rust代码优化-闭包惰性求值</a></h1>
+<p><img src="" alt="code_practice" /></p>
 <h2><a class="header" href="#背景" id="背景">背景</a></h2>
 <p>写代码时，经常会遇到从<code>Option</code>或<code>Result</code>中取值得问题，为了避免使用<code>unwrap()</code>,使用了<code>if let Some(xxx)</code>或<code>if let Ok(xxx)</code>
 的代码表达。之前的文章也介绍了这种写法，惯用法也自以为习以为常。</p>
@@ -177,7 +178,7 @@ fn get_msg(msg: &amp;Option&lt;Message&gt;) -&gt; String {
 <span class="boring">}
 </span></code></pre></pre>
 <ul>
-<li>2.为了避免<code>resp_msg</code>是<code>mut</code>，建议改使用下面这种方式：</li>
+<li>2.为了避免<code>resp_msg</code>使用<code>mut</code>，建议改使用下面这种方式：</li>
 </ul>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
