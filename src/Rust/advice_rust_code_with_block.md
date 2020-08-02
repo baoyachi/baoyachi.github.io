@@ -1,5 +1,5 @@
 # Rust代码优化-闭包惰性求值
-
+![code_practice]()
 ## 背景
 写代码时，经常会遇到从`Option`或`Result`中取值得问题，为了避免使用`unwrap()`,使用了`if let Some(xxx)`或`if let Ok(xxx)`
 的代码表达。之前的文章也介绍了这种写法，惯用法也自以为习以为常。
