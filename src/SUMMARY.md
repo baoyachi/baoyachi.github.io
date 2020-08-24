@@ -1,6 +1,7 @@
 # Summary
 
 - [关于](./about.md)
+- [follow](./follow.md)
 
 - [Rust](./Rust/readme.md)
   - [细说Rust错误处理](./Rust/rust_error_handle.md)
