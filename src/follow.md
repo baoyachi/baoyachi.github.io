@@ -3,7 +3,7 @@
 ## blog
 flow about tech blog.
 
-#### Rust
+## Rust
 * [https://blog.mgattozzi.dev/](https://blog.mgattozzi.dev/)
 * [https://stjepang.github.io/](https://stjepang.github.io/)
 
