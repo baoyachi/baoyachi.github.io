@@ -9,4 +9,5 @@
   - [Rust代码优化-闭包惰性求值](./Rust/advice_rust_code_with_block.md)
   
 - [Golang](./Golang/readmd.md)
+  - [引用链接](./Golang/link_reference.md)
   
