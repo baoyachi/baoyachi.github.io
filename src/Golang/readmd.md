@@ -9,8 +9,6 @@ golang 杂谈
 
 
 ## 格式化代码
-```bash
-gofmt -w ./
-```
+* `gofmt -w ./`
 
 
