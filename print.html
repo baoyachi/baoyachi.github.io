@@ -91,7 +91,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="about.html"><strong aria-hidden="true">1.</strong> 关于</a></li><li class="chapter-item expanded "><a href="follow.html"><strong aria-hidden="true">2.</strong> follow</a></li><li class="chapter-item expanded "><a href="Rust/index.html"><strong aria-hidden="true">3.</strong> Rust</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="Rust/rust_error_handle.html"><strong aria-hidden="true">3.1.</strong> 细说Rust错误处理</a></li><li class="chapter-item expanded "><a href="Rust/crates_private_alternative_registry.html"><strong aria-hidden="true">3.2.</strong> Rust crates私有化部署指南</a></li><li class="chapter-item expanded "><a href="Rust/advice_rust_code_with_block.html"><strong aria-hidden="true">3.3.</strong> Rust代码优化-闭包惰性求值</a></li></ol></li><li class="chapter-item expanded "><a href="Golang/readmd.html"><strong aria-hidden="true">4.</strong> Golang</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="Golang/link_reference.html"><strong aria-hidden="true">4.1.</strong> 引用链接</a></li></ol></li><li class="chapter-item expanded "><a href="Tool/index.html"><strong aria-hidden="true">5.</strong> 常用工具</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="about.html"><strong aria-hidden="true">1.</strong> 关于</a></li><li class="chapter-item expanded "><a href="follow.html"><strong aria-hidden="true">2.</strong> follow</a></li><li class="chapter-item expanded "><a href="Rust/index.html"><strong aria-hidden="true">3.</strong> Rust</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="Rust/rust_error_handle.html"><strong aria-hidden="true">3.1.</strong> 细说Rust错误处理</a></li><li class="chapter-item expanded "><a href="Rust/crates_private_alternative_registry.html"><strong aria-hidden="true">3.2.</strong> Rust crates私有化部署指南</a></li><li class="chapter-item expanded "><a href="Rust/advice_rust_code_with_block.html"><strong aria-hidden="true">3.3.</strong> Rust代码优化-闭包惰性求值</a></li><li class="chapter-item expanded "><a href="Rust/build_script.html"><strong aria-hidden="true">3.4.</strong> Rust 构建脚本</a></li></ol></li><li class="chapter-item expanded "><a href="Golang/readmd.html"><strong aria-hidden="true">4.</strong> Golang</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="Golang/link_reference.html"><strong aria-hidden="true">4.1.</strong> 引用链接</a></li></ol></li><li class="chapter-item expanded "><a href="Tool/index.html"><strong aria-hidden="true">5.</strong> 常用工具</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -1373,6 +1373,69 @@ fn get_msg(msg: &amp;Option&lt;Message&gt;) -&gt; String {
 <li><a href="https://stackoverflow.com/questions/56726571/why-choosing-unwrap-or-else-over-unwrap-or">https://stackoverflow.com/questions/56726571/why-choosing-unwrap-or-else-over-unwrap-or</a></li>
 <li><a href="https://stackoverflow.com/questions/45547293/why-should-i-prefer-optionok-or-else-instead-of-optionok-or">https://stackoverflow.com/questions/45547293/why-should-i-prefer-optionok-or-else-instead-of-optionok-or</a></li>
 </ul>
+<h1><a class="header" href="#构建你的rust编译版本信息" id="构建你的rust编译版本信息">构建你的Rust编译版本信息</a></h1>
+<p>有时，我们构建的<code>Rust</code>二进制包需要交付给它人使用。难免存在需要追溯当前二进制包的版本信息的问题。包括构建的包<code>系统环境(OS)</code>,<code>Rust版本</code>，<code>代码分支</code>，<code>commit_id</code>等常用信息。
+有了这些信息，不管是定位问题还是复现<code>bug</code>,都清晰很多。</p>
+<h2><a class="header" href="#思考" id="思考">思考</a></h2>
+<p>通过获取环境变量或外部参数，将信息编译统一打包到编译文件中。好在Rust提供了<code>build script</code>的功能，详见链接：<a href="https://doc.rust-lang.org/stable/rust-by-example/cargo/build_scripts.html">build-scripts.html</a>.
+因此我们可以通过这种方式将编译信息生成出对应的<code>rust</code>代码,通过<code>Rust</code>提供的<code>include!</code>宏来讲生成代码和目标代码打包。我们就可以在项目中使用我们生成的静态信息了。</p>
+<h2><a class="header" href="#使用-shadow-rs" id="使用-shadow-rs">使用 shadow-rs</a></h2>
+<p><a href="https://github.com/baoyachi/shadow-rs">https://github.com/baoyachi/shadow-rs</a></p>
+<p>获取环境变量，获取外部参数，判断当前构建环境，直到生成代码。这一系列过程，本身不复杂，需要判断条件，索性就写了一个构建脚本的工具，使用如下</p>
+<h2><a class="header" href="#step1" id="step1">step1</a></h2>
+<p>在当前项目目录下的<code>Cargo.toml</code>文件，配置如下信息</p>
+<pre><code class="language-toml">[package]
+build = &quot;build.rs&quot;
+
+[build-dependencies]
+shadow-rs = &quot;0.3&quot;
+</code></pre>
+<h2><a class="header" href="#step-2" id="step-2">step 2</a></h2>
+<p>在当前项目的<code>build.rs</code>文件下，配置如下：</p>
+<pre><pre class="playground"><code class="language-rust">fn main() -&gt; shadow_rs::SdResult&lt;()&gt; {
+    let src_path = std::env::var(&quot;CARGO_MANIFEST_DIR&quot;)?;
+    let out_path = std::env::var(&quot;OUT_DIR&quot;)?;
+    shadow_rs::Shadow::build(src_path, out_path)?;
+    Ok(())
+}
+</code></pre></pre>
+<h2><a class="header" href="#step-3" id="step-3">step 3</a></h2>
+<p>在当前项目下找到<code>bin</code>文件，通常是<code>main.rs</code>文件，你可以在<code>Cargo.toml</code>的<code>[bin]</code>配置找到当前主文件，然后添加如下信息</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub mod shadow{
+    include!(concat!(env!(&quot;OUT_DIR&quot;), &quot;/shadow.rs&quot;));
+}
+<span class="boring">}
+</span></code></pre></pre>
+<h2><a class="header" href="#step-4" id="step-4">step 4</a></h2>
+<p>然后你就可以使用<code>shadow</code>的常量信息了,大概如下</p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    println!(&quot;{}&quot;,shadow::BRANCH); //master
+    println!(&quot;{}&quot;,shadow::COMMIT_HASH);//8405e28e64080a09525a6cf1b07c22fcaf71a5c5
+    println!(&quot;{}&quot;,shadow::SHORT_COMMIT);//8405e28e
+    println!(&quot;{}&quot;,shadow::COMMIT_DATE);//2020-08-16T06:22:24+00:00
+    println!(&quot;{}&quot;,shadow::COMMIT_AUTHOR);//baoyachi
+    println!(&quot;{}&quot;,shadow::COMMIT_EMAIL);//xxx@gmail.com
+
+    println!(&quot;{}&quot;,shadow::BUILD_OS);//macos-x86_64
+    println!(&quot;{}&quot;,shadow::RUST_VERSION);//rustc 1.45.0 (5c1f21c3b 2020-07-13)
+    println!(&quot;{}&quot;,shadow::RUST_CHANNEL);//stable-x86_64-apple-darwin (default)
+    println!(&quot;{}&quot;,shadow::CARGO_VERSION);//cargo 1.45.0 (744bd1fbb 2020-06-15)
+    println!(&quot;{}&quot;,shadow::PKG_VERSION);//0.3.13
+    println!(&quot;{}&quot;,shadow::CARGO_LOCK);
+
+    println!(&quot;{}&quot;,shadow::PROJECT_NAME);//shadow-rs
+    println!(&quot;{}&quot;,shadow::BUILD_TIME);//2020-08-16 14:50:25
+    println!(&quot;{}&quot;,shadow::BUILD_RUST_CHANNEL);//debug
+
+    ...
+}
+</code></pre></pre>
+<p>通常，你会使用<code>clap</code>的<code>crates</code>库.</p>
+<p>详细使用，请参考链接例子：<a href="https://github.com/baoyachi/shadow-rs/tree/master/example_shadow">https://github.com/baoyachi/shadow-rs/tree/master/example_shadow</a></p>
+<h1><a class="header" href="#原文地址" id="原文地址">原文地址</a></h1>
 <h1><a class="header" href="#golang" id="golang">golang</a></h1>
 <p>golang 杂谈</p>
 <h2><a class="header" href="#lint工具" id="lint工具">lint工具</a></h2>
