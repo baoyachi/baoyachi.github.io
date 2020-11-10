@@ -1,3 +1,5 @@
+[shadow_rs](https://github.com/baoyachi/baoyachi.github.io/blob/master/png/rust/build_shadow.rs.png?raw=true)
+
 
 # 构建你的Rust编译版本信息
 有时，我们构建的`Rust`二进制包需要交付给它人使用。难免存在需要追溯当前二进制包的版本信息的问题。包括构建的包`系统环境(OS)`,`Rust版本`，`代码分支`，`commit_id`等常用信息。
