@@ -1,4 +1,4 @@
-[shadow_rs](https://github.com/baoyachi/baoyachi.github.io/blob/master/png/rust/build_shadow.rs.png?raw=true)
+![shadow_rs](https://github.com/baoyachi/baoyachi.github.io/blob/master/png/rust/build_shadow.rs.png?raw=true)
 
 
 # 构建你的Rust编译版本信息
