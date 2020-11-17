@@ -1,6 +1,7 @@
 # Summary
 
-- [关于](./about.md)
+[关于](./about.md)
+
 - [follow](./follow.md)
 
 - [Rust](./Rust/readme.md)
