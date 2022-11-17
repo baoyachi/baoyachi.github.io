@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title></title>
+        <title>baoyachi's blog</title>
         
         <meta name="robots" content="noindex" />
         
@@ -91,7 +91,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="about.html">关于</a></li><li class="chapter-item expanded "><a href="follow.html"><strong aria-hidden="true">1.</strong> follow</a></li><li class="chapter-item expanded "><a href="Rust/index.html"><strong aria-hidden="true">2.</strong> Rust</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="Rust/rust_error_handle.html"><strong aria-hidden="true">2.1.</strong> 细说Rust错误处理</a></li><li class="chapter-item expanded "><a href="Rust/crates_private_alternative_registry.html"><strong aria-hidden="true">2.2.</strong> Rust crates私有化部署指南</a></li><li class="chapter-item expanded "><a href="Rust/advice_rust_code_with_block.html"><strong aria-hidden="true">2.3.</strong> Rust代码优化-闭包惰性求值</a></li><li class="chapter-item expanded "><a href="Rust/build_script.html"><strong aria-hidden="true">2.4.</strong> Rust 构建脚本</a></li></ol></li><li class="chapter-item expanded "><a href="Golang/readmd.html"><strong aria-hidden="true">3.</strong> Golang</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="Golang/link_reference.html"><strong aria-hidden="true">3.1.</strong> 引用链接</a></li></ol></li><li class="chapter-item expanded "><a href="Tool/index.html"><strong aria-hidden="true">4.</strong> 常用工具</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="about.html">关于</a></li><li class="chapter-item expanded "><a href="follow.html"><strong aria-hidden="true">1.</strong> follow</a></li><li class="chapter-item expanded "><a href="Rust/index.html"><strong aria-hidden="true">2.</strong> Rust</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="Rust/rust_error_handle.html"><strong aria-hidden="true">2.1.</strong> 细说Rust错误处理</a></li><li class="chapter-item expanded "><a href="Rust/crates_private_alternative_registry.html"><strong aria-hidden="true">2.2.</strong> Rust crates私有化部署指南</a></li><li class="chapter-item expanded "><a href="Rust/advice_rust_code_with_block.html"><strong aria-hidden="true">2.3.</strong> Rust代码优化-闭包惰性求值</a></li><li class="chapter-item expanded "><a href="Rust/build_script.html"><strong aria-hidden="true">2.4.</strong> Rust 构建脚本</a></li><li class="chapter-item expanded "><a href="Rust/rust_trait_clone.html"><strong aria-hidden="true">2.5.</strong> Rust的Trait clone</a></li></ol></li><li class="chapter-item expanded "><a href="Golang/readmd.html"><strong aria-hidden="true">3.</strong> Golang</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="Golang/link_reference.html"><strong aria-hidden="true">3.1.</strong> 引用链接</a></li></ol></li><li class="chapter-item expanded "><a href="Tool/index.html"><strong aria-hidden="true">4.</strong> 常用工具</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -123,7 +123,7 @@
                         
                     </div>
 
-                    <h1 class="menu-title"></h1>
+                    <h1 class="menu-title">baoyachi's blog</h1>
 
                     <div class="right-buttons">
                         <a href="print.html" title="Print this book" aria-label="Print this book">
@@ -1444,6 +1444,61 @@ shadow-rs = &quot;0.3&quot;
 <p>通常，你会使用<code>clap</code>的<code>crates</code>库.</p>
 <p>详细使用，请参考链接例子：<a href="https://github.com/baoyachi/shadow-rs/tree/master/example_shadow">https://github.com/baoyachi/shadow-rs/tree/master/example_shadow</a></p>
 <h1><a class="header" href="#原文地址" id="原文地址">原文地址</a></h1>
+<h1><a class="header" href="#rust的trait-clone" id="rust的trait-clone">Rust的Trait clone</a></h1>
+<h2><a class="header" href="#背景-1" id="背景-1">背景</a></h2>
+<h2><a class="header" href="#示例" id="示例">示例</a></h2>
+<pre><pre class="playground"><code class="language-rust">use std::fmt::Debug;
+
+pub trait DynClone {
+    fn clone_box(&amp;self) -&gt; Box&lt;dyn AbsClone&gt;;
+}
+
+pub trait AbsClone: Send + Sync + DynClone + Debug {}
+
+impl Clone for Box&lt;dyn AbsClone&gt; {
+    fn clone(&amp;self) -&gt; Self {
+        self.clone_box()
+    }
+}
+
+#[derive(Clone)]
+struct Foo {
+    bar: Box&lt;dyn AbsClone&gt;,
+}
+
+impl&lt;T&gt; DynClone for T
+where
+    T: Clone + AbsClone + 'static,
+{
+    fn clone_box(&amp;self) -&gt; Box&lt;dyn AbsClone&gt; {
+        Box::new(self.clone())
+    }
+}
+
+#[derive(Clone, Debug)]
+struct Bar {
+    name: &amp;'static str,
+}
+
+impl AbsClone for Bar {}
+
+fn main() {
+    let bar = Box::new(Bar { name: &quot;hello bar&quot; });
+    let foo = Foo { bar };
+    // expect print: Bar { name: &quot;hello bar&quot; }
+    println!(&quot;{:?}&quot;, foo.bar);
+}
+
+</code></pre></pre>
+<h2><a class="header" href="#参考" id="参考">参考</a></h2>
+<ul>
+<li>https://github.com/nushell/nushell/blob/1784b4bf50/crates/nu-protocol/src/engine/command.rs#L103-L120</li>
+<li>https://github.com/dtolnay/dyn-clone/blob/1.0.9/src/lib.rs</li>
+</ul>
+<h2><a class="header" href="#延伸" id="延伸">延伸</a></h2>
+<ul>
+<li>https://crates.io/crates/typetag</li>
+</ul>
 <h1><a class="header" href="#golang" id="golang">golang</a></h1>
 <p>golang 杂谈</p>
 <h2><a class="header" href="#lint工具" id="lint工具">lint工具</a></h2>
